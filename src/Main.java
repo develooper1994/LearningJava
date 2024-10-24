@@ -1,6 +1,21 @@
 import java.util.Arrays;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.*;
+
+import java.util.stream.IntStream;
+
+import static java.lang.System.out;
+import static java.lang.Thread.sleep;
 
 class Main {
+    Main(){
+        out.println("Main Default Constructor");
+    }
+	int x;
     static int NotInitalizedGlobalVariable;
     // static double[] NotInitalizedGlobalArray = new double[10]; // global empty array usage, cause runtime exception
 
@@ -61,15 +76,345 @@ class Main {
 
     }
 
+private static void shuffleArray(int[] arr){
+        Random rand = new Random();
+        for (int i = 0; i < arr.length-1; i++) {
+            int randIndex = rand.nextInt(i+1);
+            int temp = arr[randIndex];
+            arr[randIndex] = arr[i];
+            arr[i] = temp;
+        }
+    }
+    private static double printMax(double ... numbers){
+        // variable arguments
+        if (numbers.length<=0) {
+            out.println("No Args passed");
+        }
+
+        double result = numbers[0];
+        for (int i = 1; i < numbers.length; i++) {
+            if (numbers[i]>result){
+                result = numbers[i];
+            }
+        }
+        out.println("Max: " + result);
+
+        return result;
+    }
+    private static void printPatternInstanceOf(Object o){
+        if (o instanceof String S){
+            out.println("This is String of lenght " + S.length());
+        } else if (o instanceof Character C) {
+            out.println("This is Character " + C);
+        }
+        if (o instanceof String S && !S.isEmpty()){
+            out.println("String is not empty. Lenght is " + S.length());
+        }
+
+        if (o instanceof Integer I){
+            out.println("This is Integer " + I);
+        } else if (o instanceof Long L){
+            out.println("This is Long " + L);
+        } else if (o instanceof Float F){
+            out.println("This is Float " + F);
+        } else if (o instanceof Double D){
+            out.println("This is Double " + D);
+        }
+
+        if (o instanceof Animal A) {
+            out.println("This is " + A.getClass());
+        }
+        if (o instanceof Mammal M) {
+            out.println("This is " + M.getClass());
+        }
+        if (o instanceof Dog dog) {
+            out.println("This is " + dog.getClass());
+        }
+        if (o instanceof Reptile R) {
+            out.println("This is " + R.getClass());
+        }
+        if (o instanceof Crocodile crocodile) {
+            out.println("This is " + crocodile.getClass());
+        }
+
+        if (o instanceof Human H) {
+            out.println("This is " + H.getClass());
+        }
+        if (o instanceof Person P) {
+            out.println("This is " + P.getClass());
+        }
+        if (o instanceof Child Ch) {
+            out.println("This is " + Ch.getClass());
+        }
+
+        if (o instanceof Vehicle V) {
+            out.println("This is " + V.getClass());
+        }
+        if (o instanceof Truck T) {
+            out.println("This is " + T.getClass());
+        }
+        if (o instanceof Car car) {
+            out.println("This is " + car.getClass());
+        }
+    }
+
+    static void scannerTest1(){
+        Scanner in = new Scanner(System.in);
+        out.println("in.delimiter(): " + in.delimiter());
+
+        out.println("Start entering lines.");
+        while (in.hasNext()){
+            // System.out.println("Found something: " + scanner.next());
+            if (in.hasNextInt())
+                out.println("Found a Int: " + in.nextInt());
+            else if (in.hasNextLong())
+                out.println("Found a Long: " + in.nextLong());
+            else if (in.hasNextFloat())
+                out.println("Found a Float: " + in.nextFloat());
+            else if (in.hasNextDouble())
+                out.println("Found a Double: " + in.nextDouble());
+            else if (in.hasNextBigDecimal())
+                out.println("Found a BigDecimal: " + in.nextBigDecimal());
+            else if (in.hasNextBigInteger())
+                out.println("Found a BigInteger: " + in.nextBigInteger());
+            else if (in.hasNextBoolean())
+                out.println("Found a Boolean: " + in.nextBoolean());
+            else if (in.hasNextLine())
+                out.println("Found a Line: " + in.nextLine());
+        }
+    }
+    static void scannerTest2(){
+        Scanner in = new Scanner(System.in);
+        int sum = 0, count = 0;
+        double mean = 0;
+
+        out.println("Start entering numbers");
+        while (in.hasNext()) {
+            if (in.hasNextInt()) {
+                int num = in.nextInt();
+                ++count;
+                mean += (num - mean)/count;
+            }
+            else if (in.hasNextLine()) {
+                String str = in.nextLine();
+                if (str.contains("q"))
+                    break;
+            }
+
+        }
+
+        out.println("Mean: " + mean);
+        out.println("Count: " + count);
+    }
+    static void howJvmWorks() {
+        Student s1 = new Student();
+        Student s2 = new Student();
+        Student s3 = s2;
+        out.println("s1: " + s1);
+        out.println("s1.toString(): " + s1.toString());
+        out.println("s1.equals(s2): " + s1.equals(s2));
+        out.println("s2.equals(s3): " + s2.equals(s3));
+        out.println("s1.hashCode(): " + s1.hashCode());
+        out.println("s1.getClass(): " + s1.getClass());
+
+        Class c1 = s1.getClass();
+        out.println("c1: " + c1);
+        out.println("c1.getClass(): " + c1.getClass());
+        out.println("c1.getName(): " + c1.getName());
+        out.println("---------------- Method[] m = c1.getMethods(); ----------------");
+        Method[] m = c1.getMethods();
+        Arrays.stream(m).forEach(out::println);
+        //Arrays.stream(m).map(Method::getName).forEach(out::println); // only my the name
+        out.println("---------------- Method[] md = c1.getDeclaredMethods(); ----------------");
+        Method[] md = c1.getDeclaredMethods();
+        Arrays.stream(md).forEach(out::println);
+        //Arrays.stream(md).map(Method::getName).forEach(out::println); // only my the name
+        out.println("---------------- Field[] f = c1.getFields(); ----------------");
+        Field[] f = c1.getFields();
+        Arrays.stream(f).map(Field::getName).forEach(out::println);
+        out.println("---------------- Field[] fd = c1.getDeclaredFields(); ----------------");
+        Field[] fd = c1.getDeclaredFields();
+        Arrays.stream(fd).map(Field::getName).forEach(out::println);
+
+        out.println("---------------- Class loaders ----------------");
+
+        out.println("String.class.getClassLoader(): " + String.class.getClassLoader());
+        out.println("Main.class.getClassLoader(): " + Main.class.getClassLoader());
+        out.println("Student.class.getClassLoader(): " + Student.class.getClassLoader());
+    }
+    static void datetimeTest(){
+        out.println("-*-*-*-*-* datetimeTest() *-*-*-*-*-");
+        // year, month, day,
+        Date date = new Date();
+        out.println("date: " + date);
+        Instant instant = date.toInstant();
+        out.println("instant: " + instant);
+
+        Date date2 = new Date(1970,1, 1);
+        Date date3 = new Date(1970,1, 2);
+
+        out.println(date); // .toString()
+        out.println(date.toString());
+        out.println();
+        out.println("date2.getTime(): " + date2.getTime()); // ms
+        out.println("date2.after(date3): " + date2.after(date3));
+        out.println("date3.after(date2): " + date3.after(date2));
+        out.println("date2.before(date3): " + date2.before(date3));
+        out.println("date3.before(date2): " + date3.before(date2));
+        out.println("date3.equals(date2): " + date3.equals(date2));
+
+        Date date4 = new Date();
+        out.println("date4: " + date4);
+        date4.setTime(0); // ms
+        out.println("date4.setTime(0): " + date4);
+        date4.setTime(-10); // ms
+        out.println("date4.setTime(-10): " + date4);
+        date4.setTime(date2.getTime()); // ms
+        out.println("date4.setTime(date2.getTime()): " + date4);
+
+        // date format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("G dd.MM.yyyy");
+        out.println("dateFormat.format(date4): " + dateFormat.format(date4));
+
+        out.print("\nPlease Enter a date(dd-MM-yyyy): ");
+        Scanner in = new Scanner(System.in);
+        String input = in.nextLine();
+        SimpleDateFormat dateFormatInput = new SimpleDateFormat("dd-MM-yyyy");
+
+        try {
+            out.println("dateFormatInput.parse(input): " + dateFormatInput.parse(input));
+        } catch (ParseException e) {
+            out.println("Unparseable using " + dateFormatInput);
+        }
+
+        // pause the thread
+        try {
+            long start = System.currentTimeMillis();
+            out.println(new Date());
+            sleep(1000);
+            long end = System.currentTimeMillis();
+            out.println(new Date());
+            long diff = end - start;
+            out.println("Difference is: " + diff);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    static void arraysClass(){
+        int[] intArr = {10, 15, 20, 25, 30, 25, 20, 15, 10};
+        out.println("intArr: " + intArr);
+        out.println("Arrays.asList(intArr): " + Arrays.asList(intArr));
+        out.println("List.of(intArr): " + List.of(intArr));
+        // sort methods
+        IntStream sorted = Arrays.stream(intArr).sorted();
+        out.println("Arrays.toString(sorted.toArray()): " + Arrays.toString(sorted.toArray()));
+        Arrays.sort(intArr);
+        out.println("Arrays.toString(intArr): " + Arrays.toString(intArr));
+
+        // search
+        int keysearch = 25;
+        out.println(keysearch + " found at index = " + Arrays.binarySearch(intArr, 1, 3, keysearch));
+        out.println(keysearch + " found at index = " + Arrays.binarySearch(intArr, keysearch));
+
+        int[] intArr1 = intArr.clone();
+        int[] intArr2 = {10,15,20};
+        out.println("Integer Arrays on comparion: " + Arrays.compare(intArr, intArr1));
+        out.println("Integer Arrays on comparion: " + Arrays.compare(intArr, intArr2));
+        // mismatch
+        out.println("Integer Arrays on mismatch: " + Arrays.mismatch(intArr, intArr1));
+        out.println("Integer Arrays on mismatch: " + Arrays.mismatch(intArr, intArr2));
+
+        Arrays.fill(intArr1, 0);
+        out.println("Arrays.fill(intArr1, 0): " + Arrays.toString(intArr1));
+
+        // shuffle methods
+        Integer[] numbers = Arrays.stream(intArr)             // IntStream
+                                        .boxed()              // Box each int to Integer
+                                        .toArray(Integer[]::new);
+         int[] primitiveArray = Arrays.stream(numbers)  // Stream<Integer>
+                                      .mapToInt(Integer::intValue)  // Unbox to int
+                                      .toArray();
+        // Converting the array to a list
+        List<Integer> numberList = Arrays.asList(numbers);
+        Collections.shuffle(numberList);
+        numbers = numberList.toArray(new Integer[0]);
+        out.println("Collections.shuffle(Arrays.asList(intArr)): " + Arrays.toString(numbers));
+        /// shuffleArray
+        shuffleArray(intArr);
+        out.println("shuffleArray(intArr): " + Arrays.toString(intArr));
+
+        // spliterator
+        out.println("Arrays.spliterator(intArr).toString(): " + Arrays.spliterator(intArr).toString());
+
+        // parallel algorithms
+        Arrays.parallelSort(intArr);
+        out.println("Arrays.parallelSort(intArr): " + Arrays.toString(intArr));
+
+
+
+    }
+    static void patternMathing(){
+        String s = "ABC";
+        Character character = s.toCharArray()[0];
+        Integer I = 1;
+
+        Animal a= new Animal();
+        Mammal m = new Mammal();
+        Dog dog = new Dog();
+        Reptile r = new Reptile();
+        Crocodile crocodile = new Crocodile();
+
+        Human h = new Human();
+        Person p = new Person();
+        Child ch = new Child();
+
+        Vehicle v = new Vehicle();
+        Truck t = new Truck();
+        Car car = new Car();
+
+        printPatternInstanceOf(s);
+        printPatternInstanceOf(character);
+        printPatternInstanceOf(I);
+
+        printPatternInstanceOf(a);
+        printPatternInstanceOf(m);
+        printPatternInstanceOf(dog);
+        printPatternInstanceOf(r);
+        printPatternInstanceOf(crocodile);
+
+        printPatternInstanceOf(h);
+        printPatternInstanceOf(p);
+        printPatternInstanceOf(ch);
+
+        printPatternInstanceOf(v);
+        printPatternInstanceOf(t);
+        printPatternInstanceOf(car);
+    }
+
 
     public static void main(String[] args) {
         System.out.printf("NotInitalizedGlobalVariable: %d\n", NotInitalizedGlobalVariable);
         // System.out.printf("NotInitalizedGlobalArray[0]: %d", NotInitalizedGlobalArray[0]);
 //        asciiTablePrint();
-        arrays();
-        strings();
+//        arrays();
+//        strings();
 //        CarTester.Main();
 //        EmployeeTester.Main();
+
+		//scannerTest1();
+        //scannerTest2();
+        //howJvmWorks();
+        //datetimeTest();
+        //arraysClass();
+        //Main m1 = new Main();
+        //Student s = new Student(); s.main(args); s.x=1;
+        //main(args); // stackoverflow
+
+        //printMax(new double[]{5,9,6,2,4,89,6,5,4,58,4,8541,85,5,454,85415,8,5,784545});
+        //printMax(5,9,6,2,4,89,6,5,4,58,4,8541,85,5,454,85415,8,5,784545);
+
+        patternMathing();
 
 
     }
