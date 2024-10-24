@@ -8,6 +8,10 @@ import java.util.*;
 
 import java.util.stream.IntStream;
 
+// custom packages
+import com.example.mypackage.MyClass;
+// import com.example.mypackage.*;
+
 import static java.lang.System.out;
 import static java.lang.Thread.sleep;
 
@@ -19,7 +23,7 @@ class Main {
     static int NotInitalizedGlobalVariable;
     // static double[] NotInitalizedGlobalArray = new double[10]; // global empty array usage, cause runtime exception
 
-    static void asciiTablePrint(){
+    private static void asciiTablePrint(){
         System.out.println("-*-*-*-*-* asciiTablePrint *-*-*-*-*-");
         for (short i=0;i<256;++i){
             System.out.printf("%d = %c | ", i, (char)i);
@@ -27,13 +31,13 @@ class Main {
                 System.out.println();
         }
     }
-    static void printfArray(int[] arr2){
+    private static void printfArray(int[] arr2){
         for (int i = 0; i < arr2.length; i++){
             System.out.printf("arr2[%d]: %d | ", i, arr2[i]);
         }
         System.out.println("\n------------");
     }
-    static int[] reverseArray(int[] arr){
+    private static int[] reverseArray(int[] arr){
         int[] result = new int[arr.length];
 
         for (int begin=0, end=arr.length-1; begin<arr.length; begin++, end--){
@@ -42,41 +46,7 @@ class Main {
 
         return result;
     }
-    static void arrays(){
-        double[] arr1 = new double[10]; // empty array
-        double[] arr2 = {Math.E, Math.PI, Math.TAU};
-
-        // System.out.printf("arr1[0]: %d", arr1[0]); // local empty array usage, cause runtime exception
-
-        for (int i = 0; i < arr2.length; i++){
-            System.out.printf("arr2[%d]: %10.2f | ", i, arr2[i]*100);
-        }
-        System.out.println("\n------------");
-        for (double temp :
-                arr2) {
-            System.out.print(temp + " | ");
-        }
-        System.out.println("\n------------");
-        printfArray(new int[]{987,456,321,147,852,369,753,951});
-
-        var arr3 = new int[]{0,1,2,3,4,5,6,7,8,9};
-        var Rarr3 = reverseArray(arr3);
-        printfArray(Rarr3);
-
-        // ----------------------- Arrays -----------------------
-        Arrays.fill(arr1, Math.PI);
-        for (double temp : arr1) {
-            System.out.print(temp + " | ");
-        }
-        System.out.println("\n------------");
-
-
-    }
-    static void strings(){
-
-    }
-
-private static void shuffleArray(int[] arr){
+    private static void shuffleArray(int[] arr){
         Random rand = new Random();
         for (int i = 0; i < arr.length-1; i++) {
             int randIndex = rand.nextInt(i+1);
@@ -102,6 +72,7 @@ private static void shuffleArray(int[] arr){
         return result;
     }
     private static void printPatternInstanceOf(Object o){
+        // if-else printPatternInstanceOf
         if (o instanceof String S){
             out.println("This is String of lenght " + S.length());
         } else if (o instanceof Character C) {
@@ -140,7 +111,7 @@ private static void shuffleArray(int[] arr){
         if (o instanceof Human H) {
             out.println("This is " + H.getClass());
         }
-        if (o instanceof Person P) {
+        if (o instanceof Persona P) {
             out.println("This is " + P.getClass());
         }
         if (o instanceof Child Ch) {
@@ -156,6 +127,64 @@ private static void shuffleArray(int[] arr){
         if (o instanceof Car car) {
             out.println("This is " + car.getClass());
         }
+
+        // switch printPatternInstanceOf(java 16+)
+        /*
+        record Box(Object o) {}
+        record Point(double x, double y) {}
+        // record Point(var x, var y) {} // compile time type inference doesn't work!
+        String formatted = switch (o){
+            case Integer i-> String.format("int %d", i);
+            case Long l-> String.format("int %d", l);
+            case Double d-> String.format("int %f", d);
+            //case String s && !s.isEmpty()-> String.format("int %s", s); // compile error
+            case String s when !s.isEmpty()-> String.format("int %s", s);
+            case Box(Integer i) -> String.format("Box container int: %d", i);
+            case Box(String s) -> String.format("Box container String: %s", s);
+            case Box(Object obj) -> String.format("Box container Object: %s", obj.toString());
+            default        -> String.format("Object %s", o.toString());
+        };
+        out.println(formatted);
+         */
+
+    }
+
+
+    static void arrays(){
+        double[] arr1 = new double[10]; // empty array
+        double[] arr2 = {Math.E, Math.PI, Math.TAU};
+
+        // System.out.printf("arr1[0]: %d", arr1[0]); // local empty array usage, cause runtime exception
+
+        for (int i = 0; i < arr2.length; i++){
+            System.out.printf("arr2[%d]: %10.2f | ", i, arr2[i]*100);
+        }
+        System.out.println("\n------------");
+        for (double temp :
+                arr2) {
+            System.out.print(temp + " | ");
+        }
+        System.out.println("\n------------");
+        printfArray(new int[]{987,456,321,147,852,369,753,951});
+
+        var arr3 = new int[]{0,1,2,3,4,5,6,7,8,9};
+        var Rarr3 = reverseArray(arr3);
+        printfArray(Rarr3);
+
+        // ----------------------- Arrays -----------------------
+        Arrays.fill(arr1, Math.PI);
+        for (double temp : arr1) {
+            System.out.print(temp + " | ");
+        }
+        System.out.println("\n------------");
+
+
+    }
+    static void strings(){
+
+    }
+    static void collections(){
+
     }
 
     static void scannerTest1(){
@@ -251,7 +280,7 @@ private static void shuffleArray(int[] arr){
         out.println("instant: " + instant);
 
         Date date2 = new Date(1970,1, 1);
-        Date date3 = new Date(1970,1, 2);
+        Date date3 = new Date(1970, Calendar.FEBRUARY, 2);
 
         out.println(date); // .toString()
         out.println(date.toString());
@@ -340,7 +369,7 @@ private static void shuffleArray(int[] arr){
         Collections.shuffle(numberList);
         numbers = numberList.toArray(new Integer[0]);
         out.println("Collections.shuffle(Arrays.asList(intArr)): " + Arrays.toString(numbers));
-        /// shuffleArray
+        // shuffleArray
         shuffleArray(intArr);
         out.println("shuffleArray(intArr): " + Arrays.toString(intArr));
 
@@ -366,7 +395,7 @@ private static void shuffleArray(int[] arr){
         Crocodile crocodile = new Crocodile();
 
         Human h = new Human();
-        Person p = new Person();
+        Persona p = new Persona();
         Child ch = new Child();
 
         Vehicle v = new Vehicle();
@@ -391,30 +420,60 @@ private static void shuffleArray(int[] arr){
         printPatternInstanceOf(t);
         printPatternInstanceOf(car);
     }
+    static void boxingBenchmark(){
+        // primitive data types
+        long start = System.currentTimeMillis();
+        for (long i = 0L; i < Integer.MAX_VALUE* 10L; i++);
+        long end = System.currentTimeMillis();
+        long duration = end - start;
+        out.printf("unboxed version duration: %d ms\n", duration);
 
+        // boxed version of primitive data types
+        start = System.currentTimeMillis();
+        for (Integer i = 0; i < Integer.MAX_VALUE; i++);
+        end = System.currentTimeMillis();
+        duration = end - start;
+        out.printf("boxed version duration: %d ms\n", duration);
+    }
+    static void wrapperClasses(){
+        boolean isEmpty = true;
+        Boolean isEmptyWrapper = isEmpty;
+        Boolean b1 = Boolean.TRUE;
+        Boolean b2 = Boolean.valueOf(false);
+        Boolean b3 = Boolean.valueOf("true");
+        out.println(b1.compareTo(b2)); // 0-> equal | 1-> b1 is true, b2 is false | -1-> b1 is false, b2 is true
 
+        int cp=0x10000-1;
+        out.println(Character.charCount(cp));
+
+    }
     public static void main(String[] args) {
-        System.out.printf("NotInitalizedGlobalVariable: %d\n", NotInitalizedGlobalVariable);
-        // System.out.printf("NotInitalizedGlobalArray[0]: %d", NotInitalizedGlobalArray[0]);
+//        System.out.printf("NotInitalizedGlobalVariable: %d\n", NotInitalizedGlobalVariable);
+//        System.out.printf("NotInitalizedGlobalArray[0]: %d", NotInitalizedGlobalArray[0]);
 //        asciiTablePrint();
 //        arrays();
 //        strings();
-//        CarTester.Main();
-//        EmployeeTester.Main();
+//        collections();
+//        CarTester.main(args);
+//        EmployeeTester.main(args);
+//        ShapeTester.main(args);
+//        MyClass.display("MyClass.display(\"\");");
 
-		//scannerTest1();
-        //scannerTest2();
-        //howJvmWorks();
-        //datetimeTest();
-        //arraysClass();
-        //Main m1 = new Main();
-        //Student s = new Student(); s.main(args); s.x=1;
-        //main(args); // stackoverflow
+//        scannerTest1();
+//        scannerTest2();
+//        howJvmWorks();
+//        datetimeTest();
+//        arraysClass();
+//        Main m1 = new Main();
+//        Student s = new Student(); s.main(args); s.x=1;
+//        main(args); // stackoverflow
 
-        //printMax(new double[]{5,9,6,2,4,89,6,5,4,58,4,8541,85,5,454,85415,8,5,784545});
-        //printMax(5,9,6,2,4,89,6,5,4,58,4,8541,85,5,454,85415,8,5,784545);
+//        printMax(new double[]{5,9,6,2,4,89,6,5,4,58,4,8541,85,5,454,85415,8,5,784545});
+//        printMax(5,9,6,2,4,89,6,5,4,58,4,8541,85,5,454,85415,8,5,784545);
 
-        patternMathing();
+//        patternMathing();
+//        boxingBenchmark();
+        wrapperClasses();
 
 
     }

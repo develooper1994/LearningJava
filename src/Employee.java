@@ -1,14 +1,14 @@
-class Person{
+class Persona {
     protected String name;
     protected int age;
 
 //private:
 //protected:
 //public:
-    Person(){
+    Persona(){
         this(null, 0);
     }
-    public Person(String name, int age){
+    public Persona(String name, int age){
         this.name=name;
         this.age=age;
     }
@@ -45,14 +45,14 @@ class Person{
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "Persona{" +
                 "name='" + name + '\'' +
                 ", age=" + age +
                 '}';
     }
 }
 
-public class Employee extends Person {
+public class Employee extends Persona {
     //members
     int salary;
     static final String department = "Development";
@@ -125,19 +125,20 @@ public class Employee extends Person {
 // -*-*-*-*-* EmployeeTester *-*-*-*-*-
 class EmployeeTester{
 
-    static Person person = new Person("Mustafa", 30);
+    static Persona persona = new Persona("Mustafa", 30);
     static Employee employee = new Employee("Selçuk", 35, 50000);
+    static Persona persona1 = new Employee("John Doe", 30, 5000);
 
     private static void PersonTest1(){
         System.out.println("-*-*-*-*-* PersonTest1 *-*-*-*-*-");
-        person.eat();
-        person.shit();
-        person.sleep();
-        System.out.println(person.toString());
+        persona.eat();
+        persona.shit();
+        persona.sleep();
+        System.out.println(persona.toString());
     }
     private static void EmployeeTest1(){
         System.out.println("-*-*-*-*-* EmployeeTest1 *-*-*-*-*-");
-        // employee = (Employee)person; // class downcasting: runtime error
+        // employee = (Employee)persona; // class downcasting: runtime error
         employee.eat();
         employee.shit();
         employee.sleep();
@@ -147,16 +148,20 @@ class EmployeeTester{
     private static void EmployeeTest2(){
         System.out.println("-*-*-*-*-* EmployeeTest2 *-*-*-*-*-");
         // class upcasting: working
-        //person = (Person)employee;
-        person = employee;
-        person.eat();
-        person.shit();
-        person.sleep();
+        //persona = (Persona)employee;
+        persona = employee;
+        persona.eat();
+        persona.shit();
+        persona.sleep();
         employee.work();
     }
-    public static void Main(){
+    public static void main(String[] args){
         PersonTest1();
         EmployeeTest1();
         EmployeeTest2();
+
+        System.out.println("----------------------------------------------------------");
+        persona1.makeSound();
+
     }
 }
