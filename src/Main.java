@@ -9,13 +9,80 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 // custom packages
-import com.example.mypackage.MyClass;
 // import com.example.mypackage.*;
 
 import static java.lang.System.out;
 import static java.lang.Thread.sleep;
 
-class Main {
+public class Main {
+    //<enums>
+    enum Days {
+        MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY;
+
+        @Override
+        public String toString() {
+            return switch (this){
+                case MONDAY: yield "Bugün Pazartesi. İş başı\n";
+                case TUESDAY: yield "Bugün Salı.\n";
+                case WEDNESDAY: yield "Bugün Çarşamba.\n";
+                case THURSDAY: yield "Bugün Perşembe.\n";
+                case FRIDAY: yield "Bugün Cuma. Hayırlı Cumalar. Enseyi kapa\n";
+                // java language doesn't have "or" by default
+                case SATURDAY:
+                case SUNDAY: yield "Hafta Sonu 😉\n";
+                default: yield "Böyle bir gün yok\n";
+            };
+        }
+    }
+    public enum Color{
+        // Enums can have default values
+        RED("#FF0000"), GREEN("#00FF00"), BLUE("#0000FF")
+        ;
+
+        private final String hexCode;
+
+        Color(String hexCode) {
+            this.hexCode = hexCode;
+        }
+
+        public String getHexCode() {
+            return hexCode;
+        }
+    }
+    class Window{
+        public enum WindowProp{
+            MINIMIZE(1 << 0), // 0001
+            WINDOWLESS(1 << 1), // 0010
+            FULLSCREEN(1 << 2), // 0100
+            RESIZABLE(1 << 3); // 1000
+            private final int windowProp;
+            ;
+
+            WindowProp(int windowProp) {
+                this.windowProp = windowProp;
+            }
+
+            public int getWindowProp(){
+                return windowProp;
+            }
+        }
+        private int properties;
+        public boolean hasProperties(WindowProp prop){
+            return (properties & prop.getWindowProp()) != 0;
+        }
+
+        public void setWindowProp(WindowProp... props){
+            for (WindowProp prop : props) {
+                properties |= prop.getWindowProp();
+            }
+        }
+
+        public void Tester(){
+
+        }
+    }
+    //</enums>
+
     Main(){
         out.println("Main Default Constructor");
     }
@@ -153,6 +220,7 @@ class Main {
     static void arrays(){
         double[] arr1 = new double[10]; // empty array
         double[] arr2 = {Math.E, Math.PI, Math.TAU};
+        var arr3 = new int[]{0,1,2,3,4,5,6,7,8,9};
 
         // System.out.printf("arr1[0]: %d", arr1[0]); // local empty array usage, cause runtime exception
 
@@ -167,7 +235,6 @@ class Main {
         System.out.println("\n------------");
         printfArray(new int[]{987,456,321,147,852,369,753,951});
 
-        var arr3 = new int[]{0,1,2,3,4,5,6,7,8,9};
         var Rarr3 = reverseArray(arr3);
         printfArray(Rarr3);
 
@@ -351,12 +418,13 @@ class Main {
         out.println("Integer Arrays on comparion: " + Arrays.compare(intArr, intArr1));
         out.println("Integer Arrays on comparion: " + Arrays.compare(intArr, intArr2));
         // mismatch
-        out.println("Integer Arrays on mismatch: " + Arrays.mismatch(intArr, intArr1));
-        out.println("Integer Arrays on mismatch: " + Arrays.mismatch(intArr, intArr2));
+        int result1 = Arrays.mismatch(intArr, intArr1);
+        int result2 = Arrays.mismatch(intArr, intArr2);
+        out.println(result1 < 0 ? "No Mismatch" : "Integer Arrays on mismatch index of: " + result1);
+        out.println(result2 < 0 ? "No Mismatch" : "Integer Arrays on mismatch index of: " + result2);
 
         Arrays.fill(intArr1, 0);
         out.println("Arrays.fill(intArr1, 0): " + Arrays.toString(intArr1));
-
         // shuffle methods
         Integer[] numbers = Arrays.stream(intArr)             // IntStream
                                         .boxed()              // Box each int to Integer
@@ -380,7 +448,20 @@ class Main {
         Arrays.parallelSort(intArr);
         out.println("Arrays.parallelSort(intArr): " + Arrays.toString(intArr));
 
+        // fill with random
+        int[] arr1 = new int[10];
+        int min=5, max=10;
+        for (int i = 0; i < arr1.length; i++) {
+            arr1[i] = (int) (Math.random()*(max-min) + min);
+        }
+        out.println("arr: " + Arrays.toString(arr1));
 
+        int[] arr2 = new int[10];
+        Random rand = new Random();
+        for (int i = 0; i < arr1.length; i++) {
+            arr1[i] = rand.nextInt(5,10);
+        }
+        out.println("arr: " + Arrays.toString(arr1));
 
     }
     static void patternMathing(){
@@ -443,10 +524,36 @@ class Main {
         Boolean b3 = Boolean.valueOf("true");
         out.println(b1.compareTo(b2)); // 0-> equal | 1-> b1 is true, b2 is false | -1-> b1 is false, b2 is true
 
+        // parse data type from string
+        out.println(Integer.parseInt("123456"));
+        out.println(Long.parseLong("123456"));
+        out.println(Double.parseDouble("123.456"));
+        out.println(Boolean.parseBoolean("False"));
+        out.println(Boolean.parseBoolean("123.456"));
+        out.println(Boolean.parseBoolean(""));
+        out.println(Boolean.parseBoolean(""));
+        out.println(Integer.min(1,2));
+        out.println(Float.max(0.1f,0.2f));
+
+        // unboxing
+        Byte b = 127;
+        out.println("Byte: " + b.byteValue());
+
+        // Character
         int cp=0x10000-1;
         out.println(Character.charCount(cp));
 
+        char c = 'c';
+        out.println("getType: " + Character.getType(c));
+        out.println("isDigit: " + Character.isDigit(c));
+        out.println("isWhitespace: " + Character.isWhitespace(c));
+        out.println("isAlphabetic: " + Character.isAlphabetic(c));
+        out.println("reverseBytes: " + Character.reverseBytes(c));
+        out.println("isLowerCase: " + Character.isLowerCase(c));
+        out.println("isUpperCase: " + Character.isUpperCase(c));
+        out.println("getNumericValue: " + Character.getNumericValue(c));
     }
+
     public static void main(String[] args) {
 //        System.out.printf("NotInitalizedGlobalVariable: %d\n", NotInitalizedGlobalVariable);
 //        System.out.printf("NotInitalizedGlobalArray[0]: %d", NotInitalizedGlobalArray[0]);
@@ -463,7 +570,7 @@ class Main {
 //        scannerTest2();
 //        howJvmWorks();
 //        datetimeTest();
-//        arraysClass();
+        arraysClass();
 //        Main m1 = new Main();
 //        Student s = new Student(); s.main(args); s.x=1;
 //        main(args); // stackoverflow
@@ -473,7 +580,7 @@ class Main {
 
 //        patternMathing();
 //        boxingBenchmark();
-        wrapperClasses();
+//        wrapperClasses();
 
 
     }
