@@ -285,13 +285,40 @@ public class Main {
         * TreeMap: Elemanları anahtar sırasına göre sıralar ve hızlı sıralı erişim sunar.
         *
         *
-        * Veri Yapısı	                                                            Ekleme Sırasını Korur	Sıralama	Duplikasyona İzin Verir	Hashing Mekanizması	Thread-Safe
-          List (ArrayList, LinkedList)	                                            Evet	                Hayır	Evet	Hayır	Hayır
-          Set (HashSet, LinkedHashSet, TreeSet)	LinkedHashSet:                      Evet; Diğerleri: Hayır	TreeSet: Evet	Hayır	HashSet, LinkedHashSet: Evet	Hayır
-          Queue (LinkedList, PriorityQueue, ArrayDeque)	LinkedList, PriorityQueue:  Evet	PriorityQueue: Evet	Evet	Hayır	Hayır
-          Map (HashMap, LinkedHashMap, TreeMap, Hashtable)	LinkedHashMap:          Evet; Diğerleri: Hayır	TreeMap: Evet	Yalnızca benzersiz anahtarlar	HashMap, LinkedHashMap: Evet	Hashtable: Evet; Diğerleri: Hayır
-
+        * 1. Ortak Özellikler
+        *   Koleksiyon Arayüzlerini Takip Etme: Tüm veri yapıları Java'nın koleksiyon çerçevesine (Java Collections Framework) bağlı arayüzleri uygular. Örneğin, List, Set, ve Queue yapıları Collection arayüzünü uygularken, Map kendi Map arayüzünü kullanır.
+        *   Generic Destek: Tüm veri yapıları, Java'da Generics özelliğini destekler ve bu sayede koleksiyonda saklanacak veri tipleri belirlenebilir. Örneğin, List<String> yalnızca String tipindeki verileri saklamak için kullanılır.
+        *   Çoğu Yapıda Iterator Kullanımı: List, Set ve Queue gibi veri yapılarında, veriler üzerinde gezinmek için Iterator arayüzü kullanılabilir. Bu, elemanları sırasıyla işlemek için önemli bir mekanizmadır.
+        *   Çoğu Yapıda Boş Veri Kontrolü: isEmpty() metodu sayesinde veri yapısının boş olup olmadığını kontrol etmek mümkündür. Bu metot, Collection arayüzünü uygulayan tüm veri yapılarında mevcuttur.
+        *    Eşzamansızlık (Thread-Safety) Sorunları: Koleksiyon çerçevesindeki çoğu veri yapısı (örneğin ArrayList, HashMap, HashSet), varsayılan olarak thread-safe değildir. Ancak Hashtable gibi bazı yapılar varsayılan olarak thread-safe'tir. Ayrıca Collections.synchronizedList() gibi metotlarla da eşzamanlı erişim sağlanabilir.
         *
+        * 2. İşlem Metotları ve Genel İşlevler
+        *   Eleman Ekleme ve Çıkarma: Çoğu koleksiyon veri yapısı eleman eklemek için add() ve çıkarmak için remove() metodunu kullanır. Map yapıları ise put() ve remove() metotlarına sahiptir.
+        *   Elemanlara Erişim: List ve Map veri yapılarında belirli bir anahtar veya indeks ile doğrudan erişim mümkündür (get() metodu). Diğer yapılarda belirli bir sırayla veya anahtar ile erişim sağlanır.
+        *   Eleman Arama: Tüm veri yapılarında belirli bir elemanın var olup olmadığını kontrol etmek için contains() gibi metotlar bulunur. Map yapıları containsKey() ve containsValue() metodunu sağlar.
+        *   Koleksiyon Boyutu: size() metodu, koleksiyonların eleman sayısını döner. Bu, veri yapısının kaç eleman içerdiğini hızlıca öğrenmek için kullanılır.
+        *
+        * 3. Performans ve Veri Saklama Özellikleri
+        *   Hızlı Erişim (Hashing): HashMap, HashSet, ve Hashtable yapılarında hashing mekanizması kullanılır. Bu sayede elemanlar anahtarlarla hızlıca saklanır ve erişilir.
+        *   Sıralı ve Sırasız Saklama: ArrayList ve LinkedList ekleme sırasını korur; HashSet ve HashMap sırasızdır, ancak LinkedHashSet ve LinkedHashMap ekleme sırasını korur. TreeSet ve TreeMap ise elemanları sıralı olarak saklar.
+        *       Sırasız: HashSet, HashMap
+        *       Ekleme Sırasını korur: (ArrayList, LinkedList), (LinkedHashSet, LinkedHashMap)
+        *       Sıralı: TreeSet, TreeMap
+        *   Duplikasyon Kontrolü: Set yapıları (örneğin HashSet, TreeSet), aynı değere sahip elemanların birden fazla olmasını engeller. List ve Queue yapılarında ise bu kontrol yoktur; aynı eleman birden fazla defa eklenebilir.
+        *
+        * 4. Özet Tablo
+        * <img src="../images/JavaCollections.png" alt="Java Collections"/>
+        * ![Java Collections](../images/JavaCollections.png)
+        *
+        * 5. Pratik Durumlar
+        *   1. List:  Örneğin, kullanıcıların kayıt sırasını tutmak için
+        *   2. Set:   Örneğin, bir kullanıcıların benzersiz kimlik numaraları veya kullanıcı adları gibi veriler
+        *   3. Queue: Örneğin, yazıcı kuyrukları veya görev yönetim sistemlerinde
+        *   4. Map:   Örneğin, bir kullanıcı adı ile kullanıcı bilgilerini eşleştirmek için
+        *   5. Thread-Safe Durumlar: ConcurrentHashMap veya Hashtable gibi thread-safe veri yapıları tercih edilir
+        *   6. Özelleşmiş Durumlar:
+        *       1. Geçici Veri Depolama: Sadece geçici veri saklanması gerekiyorsa (örneğin, bir işlemin ara sonuçları için), ArrayList veya HashMap kullanımı hızlı ve etkilidir.
+        *       2. Statik ve Dinamik Veriler: Statik (değişmeyecek) veriler için Arrays.asList() ile oluşturulan sabit bir liste kullanılabilirken, dinamik veriler için ArrayList kullanılmalıdır.
         *
         * * -*-*-* Common methods *-*-*-
         * add(): Eleman ekler.
