@@ -1060,10 +1060,10 @@ public class Main {
 //        asciiTablePrint();
 //        arrays();
 //        strings();
-        collections();
-        iterators();
+//        collections();
+//        iterators();
 //        files();
-//        exceptions();
+        exceptions();
 //        CarTester.main(args);
 //        EmployeeTester.main(args);
 //        ShapeTester.main(args);
