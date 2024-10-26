@@ -93,7 +93,7 @@ class Window{
     }
 }
 
-public class Main {
+public class Enums {
 
     static void enums(){
         Days today = Days.FRIDAY;
