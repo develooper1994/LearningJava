@@ -1,0 +1,5 @@
+There are dozens of ways to create, read, write and delete a file in java language!
+Some of them:
+File.createNewFile(), FileWriter.write(), FileReader.read() (Generic usage, Programmer have to create multiple objects handle everything manually) -> classical way
+FileOutputStream() constructor (Practical for reading and writing data files!)                                                                     -> c++ input and output streams
+Files.write()                                               -> a new way, without creating object
