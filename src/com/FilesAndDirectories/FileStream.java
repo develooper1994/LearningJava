@@ -1,4 +1,4 @@
-package com.Files;
+package com.FilesAndDirectories;
 
 import java.io.*;
 
@@ -6,6 +6,7 @@ import static java.lang.System.out;
 
 /*
 * Practical for reading and writing data files!
+* Byte Stream(1 byte)
 * */
 class FileStream {
     String filename = "newFile.txt";
@@ -54,7 +55,8 @@ class FileStream {
         }
     }
     private void delete(){
-        out.println(new File(filename).delete() ? "File deleted" : "File cannot deleted");
+        var file = new File(filename);
+        out.println(file.exists() && file.delete() ? "File deleted" : "File cannot deleted");
     }
 
     public static void main(String[] args){

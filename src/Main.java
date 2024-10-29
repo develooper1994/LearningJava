@@ -247,6 +247,73 @@ public class Main {
 
 
     }
+    static void arraysClass(){
+        int[] intArr = {10, 15, 20, 25, 30, 25, 20, 15, 10};
+        out.println("intArr: " + intArr);
+        out.println("Arrays.asList(intArr): " + Arrays.asList(intArr));
+        out.println("List.of(intArr): " + List.of(intArr));
+        // sort methods
+        IntStream sorted = Arrays.stream(intArr).sorted();
+        out.println("Arrays.toString(sorted.toArray()): " + Arrays.toString(sorted.toArray()));
+        Arrays.sort(intArr);
+        out.println("Arrays.toString(intArr): " + Arrays.toString(intArr));
+
+        // search
+        int keysearch = 25;
+        out.println(keysearch + " found at index = " + Arrays.binarySearch(intArr, 1, 3, keysearch));
+        out.println(keysearch + " found at index = " + Arrays.binarySearch(intArr, keysearch));
+
+        int[] intArr1 = intArr.clone();
+        int[] intArr2 = {10,15,20};
+        out.println("Integer Arrays on comparion: " + Arrays.compare(intArr, intArr1));
+        out.println("Integer Arrays on comparion: " + Arrays.compare(intArr, intArr2));
+        // mismatch
+        int result1 = Arrays.mismatch(intArr, intArr1);
+        int result2 = Arrays.mismatch(intArr, intArr2);
+        out.println(result1 < 0 ? "No Mismatch" : "Integer Arrays on mismatch index of: " + result1);
+        out.println(result2 < 0 ? "No Mismatch" : "Integer Arrays on mismatch index of: " + result2);
+
+        Arrays.fill(intArr1, 0);
+        out.println("Arrays.fill(intArr1, 0): " + Arrays.toString(intArr1));
+        // shuffle methods
+        Integer[] numbers = Arrays.stream(intArr)             // IntStream
+                                        .boxed()              // Box each int to Integer
+                                        .toArray(Integer[]::new);
+         int[] primitiveArray = Arrays.stream(numbers)  // Stream<Integer>
+                                      .mapToInt(Integer::intValue)  // Unbox to int
+                                      .toArray();
+        // Converting the array to a list
+        List<Integer> numberList = Arrays.asList(numbers);
+        Collections.shuffle(numberList);
+        numbers = numberList.toArray(new Integer[0]);
+        out.println("Collections.shuffle(Arrays.asList(intArr)): " + Arrays.toString(numbers));
+        // shuffleArray
+        shuffleArray(intArr);
+        out.println("shuffleArray(intArr): " + Arrays.toString(intArr));
+
+        // spliterator
+        out.println("Arrays.spliterator(intArr).toString(): " + Arrays.spliterator(intArr).toString());
+
+        // parallel algorithms
+        Arrays.parallelSort(intArr);
+        out.println("Arrays.parallelSort(intArr): " + Arrays.toString(intArr));
+
+        // fill with random
+        int[] arr1 = new int[10];
+        int min=5, max=10;
+        for (int i = 0; i < arr1.length; i++) {
+            arr1[i] = (int) (Math.random()*(max-min) + min);
+        }
+        out.println("arr: " + Arrays.toString(arr1));
+
+        int[] arr2 = new int[10];
+        Random rand = new Random();
+        for (int i = 0; i < arr1.length; i++) {
+            arr1[i] = rand.nextInt(5,10);
+        }
+        out.println("arr: " + Arrays.toString(arr1));
+
+    }
     static void strings(){
 
     }
@@ -254,54 +321,6 @@ public class Main {
 
     }
 
-    static void scannerTest1(){
-        Scanner in = new Scanner(System.in);
-        out.println("in.delimiter(): " + in.delimiter());
-
-        out.println("Start entering lines.");
-        while (in.hasNext()){
-            // System.out.println("Found something: " + scanner.next());
-            if (in.hasNextInt())
-                out.println("Found a Int: " + in.nextInt());
-            else if (in.hasNextLong())
-                out.println("Found a Long: " + in.nextLong());
-            else if (in.hasNextFloat())
-                out.println("Found a Float: " + in.nextFloat());
-            else if (in.hasNextDouble())
-                out.println("Found a Double: " + in.nextDouble());
-            else if (in.hasNextBigDecimal())
-                out.println("Found a BigDecimal: " + in.nextBigDecimal());
-            else if (in.hasNextBigInteger())
-                out.println("Found a BigInteger: " + in.nextBigInteger());
-            else if (in.hasNextBoolean())
-                out.println("Found a Boolean: " + in.nextBoolean());
-            else if (in.hasNextLine())
-                out.println("Found a Line: " + in.nextLine());
-        }
-    }
-    static void scannerTest2(){
-        Scanner in = new Scanner(System.in);
-        int sum = 0, count = 0;
-        double mean = 0;
-
-        out.println("Start entering numbers");
-        while (in.hasNext()) {
-            if (in.hasNextInt()) {
-                int num = in.nextInt();
-                ++count;
-                mean += (num - mean)/count;
-            }
-            else if (in.hasNextLine()) {
-                String str = in.nextLine();
-                if (str.contains("q"))
-                    break;
-            }
-
-        }
-
-        out.println("Mean: " + mean);
-        out.println("Count: " + count);
-    }
     static void howJvmWorks() {
         Student s1 = new Student();
         Student s2 = new Student();
@@ -395,73 +414,6 @@ public class Main {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-    }
-    static void arraysClass(){
-        int[] intArr = {10, 15, 20, 25, 30, 25, 20, 15, 10};
-        out.println("intArr: " + intArr);
-        out.println("Arrays.asList(intArr): " + Arrays.asList(intArr));
-        out.println("List.of(intArr): " + List.of(intArr));
-        // sort methods
-        IntStream sorted = Arrays.stream(intArr).sorted();
-        out.println("Arrays.toString(sorted.toArray()): " + Arrays.toString(sorted.toArray()));
-        Arrays.sort(intArr);
-        out.println("Arrays.toString(intArr): " + Arrays.toString(intArr));
-
-        // search
-        int keysearch = 25;
-        out.println(keysearch + " found at index = " + Arrays.binarySearch(intArr, 1, 3, keysearch));
-        out.println(keysearch + " found at index = " + Arrays.binarySearch(intArr, keysearch));
-
-        int[] intArr1 = intArr.clone();
-        int[] intArr2 = {10,15,20};
-        out.println("Integer Arrays on comparion: " + Arrays.compare(intArr, intArr1));
-        out.println("Integer Arrays on comparion: " + Arrays.compare(intArr, intArr2));
-        // mismatch
-        int result1 = Arrays.mismatch(intArr, intArr1);
-        int result2 = Arrays.mismatch(intArr, intArr2);
-        out.println(result1 < 0 ? "No Mismatch" : "Integer Arrays on mismatch index of: " + result1);
-        out.println(result2 < 0 ? "No Mismatch" : "Integer Arrays on mismatch index of: " + result2);
-
-        Arrays.fill(intArr1, 0);
-        out.println("Arrays.fill(intArr1, 0): " + Arrays.toString(intArr1));
-        // shuffle methods
-        Integer[] numbers = Arrays.stream(intArr)             // IntStream
-                                        .boxed()              // Box each int to Integer
-                                        .toArray(Integer[]::new);
-         int[] primitiveArray = Arrays.stream(numbers)  // Stream<Integer>
-                                      .mapToInt(Integer::intValue)  // Unbox to int
-                                      .toArray();
-        // Converting the array to a list
-        List<Integer> numberList = Arrays.asList(numbers);
-        Collections.shuffle(numberList);
-        numbers = numberList.toArray(new Integer[0]);
-        out.println("Collections.shuffle(Arrays.asList(intArr)): " + Arrays.toString(numbers));
-        // shuffleArray
-        shuffleArray(intArr);
-        out.println("shuffleArray(intArr): " + Arrays.toString(intArr));
-
-        // spliterator
-        out.println("Arrays.spliterator(intArr).toString(): " + Arrays.spliterator(intArr).toString());
-
-        // parallel algorithms
-        Arrays.parallelSort(intArr);
-        out.println("Arrays.parallelSort(intArr): " + Arrays.toString(intArr));
-
-        // fill with random
-        int[] arr1 = new int[10];
-        int min=5, max=10;
-        for (int i = 0; i < arr1.length; i++) {
-            arr1[i] = (int) (Math.random()*(max-min) + min);
-        }
-        out.println("arr: " + Arrays.toString(arr1));
-
-        int[] arr2 = new int[10];
-        Random rand = new Random();
-        for (int i = 0; i < arr1.length; i++) {
-            arr1[i] = rand.nextInt(5,10);
-        }
-        out.println("arr: " + Arrays.toString(arr1));
 
     }
     static void patternMathing(){
@@ -559,6 +511,7 @@ public class Main {
 //        System.out.printf("NotInitalizedGlobalArray[0]: %d", NotInitalizedGlobalArray[0]);
 //        asciiTablePrint();
 //        arrays();
+//        arraysClass();
 //        strings();
 //        iterators();
 //        CarTester.main(args);
@@ -566,11 +519,8 @@ public class Main {
 //        ShapeTester.main(args);
 //        MyClass.display("MyClass.display(\"\");");
 
-//        scannerTest1();
-//        scannerTest2();
 //        howJvmWorks();
 //        datetimeTest();
-//        arraysClass();
 //        Main m1 = new Main();
 //        Student s = new Student(); s.main(args); s.x=1;
 //        main(args); // stackoverflow

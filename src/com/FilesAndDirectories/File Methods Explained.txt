@@ -5,3 +5,7 @@ Some of them:
 - Files.write() -> nio package, a new way, without creating object
 - Scanner -> with parsing. you can use it with any type of data(Strings, Files, System.in, ...). hasNext and next series of methods are two important series.
 - System.in -> standart input can be used with other file operations ;)
+
+# Directories
+- java.io.File class
+- java.nio.Files static methods -> gives extra powers

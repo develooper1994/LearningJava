@@ -1,4 +1,4 @@
-package com.Files;
+package com.FilesAndDirectories;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -10,6 +10,7 @@ import static java.lang.System.out;
 
 /*
 * Classical, Old method
+* Char Stream (2 bytes)
 * Generic usage
 * Programmer have to create multiple objects handle everything manually
 * */
@@ -143,7 +144,7 @@ class FilesClass {
         }
     }
     private void deleteFile(){
-        out.println(file.delete() ? "File deleted" : "File cannot deleted");
+        out.println(file.exists() && file.delete() ? "File deleted" : "File cannot deleted");
 //         file.deleteOnExit(); // delete on jre close
     }
     private void copyFile(){

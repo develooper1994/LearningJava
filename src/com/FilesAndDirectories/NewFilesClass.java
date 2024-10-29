@@ -1,4 +1,4 @@
-package com.Files;
+package com.FilesAndDirectories;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class NewFilesClass {
 //            Files.write(Paths.get(filename), lines, StandardCharsets.UTF_8); // creates evertime
             Files.write(Paths.get(filename), lines, StandardCharsets.UTF_8, StandardOpenOption.APPEND); // creates evertime
         } catch (IOException e) {
-            System.out.println("IOException: An error occurred. File Exist");
+            System.out.println("IOException: An error occurred.");
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -41,13 +41,14 @@ public class NewFilesClass {
             var content = Files.readAllLines(Paths.get(filename));
             out.println(content);
         } catch (IOException e) {
-            System.out.println("IOException: An error occurred. File Exist");
+            System.out.println("IOException: An error occurred.");
             e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
     private void deleteFile() {
-        out.println(new File(filename).delete() ? "File deleted" : "File cannot deleted");
+        var file = new File(filename);
+        out.println(file.exists() && file.delete() ? "File deleted" : "File cannot deleted");
     }
 
     public static void main(String[] args){
