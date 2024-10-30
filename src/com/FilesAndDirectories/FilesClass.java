@@ -15,17 +15,18 @@ import static java.lang.System.out;
 * Programmer have to create multiple objects handle everything manually
 * */
 class FilesClass {
-    String filename = "newFile.txt";
-    String data = "Test data";
-    File file = new File(filename);
-    FileReader fileReader; // -> FileNotFoundException
-    FileWriter fileWriter;
+    private final String filename = "newFile.txt";
+    private String data = "Test data";
+    private final File file = new File(filename);
+    // BufferedXXXX increases performance
+    private final BufferedReader fileReader; // -> FileNotFoundException
+    private BufferedWriter fileWriter; // -> IOException
 
     FilesClass() {
         try {
             // close them whenever work is finished.
-            fileWriter = new FileWriter(file); // -> IOException
-            fileReader = new FileReader(file); // -> FileNotFoundException
+            fileWriter = new BufferedWriter(new FileWriter(file)); // -> IOException
+            fileReader = new BufferedReader(new FileReader(file)); // -> FileNotFoundException
         } catch (FileNotFoundException e) {
             System.out.println("FileNotFoundException: An error occurred.");
             e.printStackTrace();
@@ -39,7 +40,7 @@ class FilesClass {
 
     private void createFile(){
         try {
-            if (file.createNewFile()){
+            if (file.createNewFile()){ // not mandatory. FileWriter class can create a file.
                 out.println("File Created: " + file.getName());
                 testFile();
             } else {
@@ -88,7 +89,7 @@ class FilesClass {
     }
     private void appendFile(){
         try {
-            fileWriter = new FileWriter(filename, true); // filename, (append or not append)
+            fileWriter = new BufferedWriter(new FileWriter(filename, true)); // filename, (append or not append)
             out.println("Writing in to file: " + file.getName());
             // write in to that!
             fileWriter.write(data);

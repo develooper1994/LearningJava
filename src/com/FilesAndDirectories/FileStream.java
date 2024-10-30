@@ -1,6 +1,8 @@
 package com.FilesAndDirectories;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static java.lang.System.out;
 
@@ -9,15 +11,16 @@ import static java.lang.System.out;
 * Byte Stream(1 byte)
 * */
 class FileStream {
-    String filename = "newFile.txt";
-    String data = "Test data";
-    FileOutputStream outStream;
-    FileInputStream inputStream;
+    private final String filename = "newFile.txt";
+    private String data = "Test data";
+    // BufferedXXXX increases performance
+    private final BufferedOutputStream outStream;
+    private final BufferedInputStream inputStream;
 
     FileStream(){
         try {
-            outStream = new FileOutputStream(filename);
-            inputStream = new FileInputStream(filename);
+            outStream = new BufferedOutputStream(new FileOutputStream(filename));
+            inputStream = new BufferedInputStream(new FileInputStream(filename));
         } catch (FileNotFoundException e) {
             System.out.println("IOException: An error occurred.");
             e.printStackTrace();
@@ -55,8 +58,13 @@ class FileStream {
         }
     }
     private void delete(){
-        var file = new File(filename);
-        out.println(file.exists() && file.delete() ? "File deleted" : "File cannot deleted");
+        try {
+            Files.delete(Path.of(filename));
+            out.println("File deleted");
+        } catch (IOException e) {
+            out.println("File cannot deleted");
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args){

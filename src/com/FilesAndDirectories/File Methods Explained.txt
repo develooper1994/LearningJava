@@ -2,8 +2,9 @@ There are dozens of ways to create, read, write and delete a file in java langua
 Some of them:
 - (char-2 byte stream)File.createNewFile(), FileWriter.write(), FileReader.read() (Generic usage, Programmer have to create multiple objects handle everything manually) -> classical way
 - (byte-1 byte stream)FileOutputStream() constructor (Practical for reading and writing data files!)    -> c++ input and output streams but with bytes
+- BufferedXXXX(BufferedWriter, BufferedReader, BufferedInputStream, BufferedOutputStream, ...) -> intermediate class to improve performance
 - Files.write() -> nio package, a new way, without creating object
-- Scanner -> with parsing. you can use it with any type of data(Strings, Files, System.in, ...). hasNext and next series of methods are two important series.
+- Scanner -> FileReader or BufferedReader with parsing. you can use it with any type of data(Strings, Files, System.in, ...). hasNext and next series of methods are two important series.
 - System.in -> standart input can be used with other file operations ;)
 
 # Directories
