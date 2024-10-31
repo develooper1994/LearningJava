@@ -1,5 +1,7 @@
 package com.MultiTask.MultiThread;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.*;
 
 import static java.lang.System.out;
@@ -14,7 +16,7 @@ import static java.lang.System.out;
 *
 * State Chart:
 *                +-----------+
-                 |   New     |
+                 |    New    |
                  +-----------+
                         |
                         |  start()
@@ -35,12 +37,12 @@ import static java.lang.System.out;
       +-------------+  |   +----------------+
       |  Terminated |<-|-->| Timed Waiting |
       +-------------+  |   +----------------+
-                        |
-                        |
-                        v
-                   +-----------+
-                   | Runnable  |
-                   +-----------+
+                       |
+                       |
+                       v
+                  +-----------+
+                  | Runnable  |
+                  +-----------+
 * */
 
 /*
@@ -169,6 +171,9 @@ class Interrupted implements Runnable {
             }
         }
     }
+    public void interrupt(){
+        thread.interrupt();
+    }
 
     public void start(){
         if (thread == null) {
@@ -184,7 +189,7 @@ class Interrupted implements Runnable {
         try {
             while (true) {
                 Thread.sleep(2000);
-                interrupted.thread.interrupt();
+                interrupted.interrupt();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -243,10 +248,140 @@ class Counter {
     }
 }
 
+// -*-*-*-*-* ThreadPoll *-*-*-*-*-
+/*
+Neden ThreadPool Kullanılır?
+* Performans: Her görev için yeni bir iş parçacığı oluşturmak ve kapatmak yerine mevcut iş parçacıkları tekrar kullanılır, bu da maliyetli iş parçacığı oluşturma ve yok etme işlemlerini azaltır.
+* Kaynak Yönetimi: İş parçacığı sayısı kontrol altında tutularak sistem kaynakları daha verimli kullanılır.
+* Kolaylık: Java’nın Executors sınıfı, çeşitli türde iş parçacığı havuzlarını oluşturmak için basit yöntemler sağlar.
+* ThreadPool Çeşitleri
+
+Java’da çeşitli iş parçacığı havuzları bulunmaktadır:
+
+- Fixed Thread Pool: Sabit sayıda iş parçacığına sahip bir havuz oluşturur.
+    Kullanımı: Executors.newFixedThreadPool(int nThreads)
+- Cached Thread Pool: Gerektiğinde yeni iş parçacığı ekler, kullanılmayan iş parçacıklarını belirli bir süre sonra kapatır.
+    Kullanımı: Executors.newCachedThreadPool()
+- Single Thread Executor: Tek iş parçacığıyla görevleri sırayla çalıştırır.
+    Kullanımı: Executors.newSingleThreadExecutor()
+- Scheduled Thread Pool: Zamanlanmış veya belirli aralıklarla çalışan görevler için kullanılır.
+    Kullanımı: Executors.newScheduledThreadPool(int corePoolSize)
+* */
+
+/*
+* Performans ve Esneklik: ScheduledExecutorService, Timer'dan daha esnek ve çok iş
+* parçacıklı görevleri daha verimli yönetir.
+* Hata Toleransı: Timer, bir görevde hata oluştuğunda tüm zamanlayıcıyı durdurabilir;
+* ScheduledExecutorService ise daha dayanıklıdır.
+*
+* Schedule: Tek seferlik çalıştırm gerçekleştirir. Qt oneShotTimer gibi
+* ScheduleAtFixedRate: Birden fazla kez çalıştırma gerçekleştirir. Metodun sonuçlanmasıını beklemez.
+* Periyotlar arasındaki süre metotların başlangıçları arasındaki süresidir.
+* ScheduleWithFixedDelay: Birden fazla kez çalıştırma gerçekleştirir. Metodun sonuçlanmasıını bekler.
+* Periyotlar arasındaki süre metotların bitişleri arasındaki süresidir.
+*
+* ScheduledExecutorService
+* Oluşturulan scheduler nesnesi birden fazla kullanılabilir fakat!
+* - 1 threadpool kullanılıyorsa scheduler nesnesine bağlı görevler sırayla gerçekleştirilir.
+* - 1 threadpool'dan fazla kullanılıyorsa scheduler nesnesine bağlı görevler kaç thread varsa threadlere atanarak eş zamanlı gerçekleştirilebilir.
+*
+* Not: Eğer shutdown() çağrıldıktan sonra yeni görev eklemeye çalışırsanız, bir RejectedExecutionException hatası alırsınız.
+* */
+class ScheduledTasks{
+    static class Alarm implements Runnable{
+        String m_name;
+        public Alarm(String name){
+            m_name = name;
+        }
+        @Override
+        public void run() {
+            out.println(m_name + " ⏰ " + System.currentTimeMillis());
+        }
+    }
+    static void test1(){
+            final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+            // start in 0-second delay with 2-seconds periods. Doesn't wait to finish the execution.
+            final ScheduledFuture<?> alarmHandler = scheduler.scheduleAtFixedRate(new Alarm("scheduleAtFixedRate"), 0, 2, TimeUnit.SECONDS);
+            // stop the scheduler in 10-seconds
+            scheduler.schedule((Runnable) () -> {
+                alarmHandler.cancel(true);
+                scheduler.shutdown();
+                out.println("scheduleAtFixedRate finished");
+            }, 10, TimeUnit.SECONDS);
+
+            Runnable task = () -> {
+                try {
+                    out.println("scheduleWithFixedDelay ⏰");
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    out.println("Interrupted");
+                }
+            };
+            // start in 1-second delay with 3-seconds periods. Waits to finish the execution.
+            final ScheduledFuture<?> alarmHandler2 = scheduler.scheduleWithFixedDelay(task, 1, 3, TimeUnit.SECONDS);
+            scheduler.schedule((Runnable) () -> {
+                alarmHandler2.cancel(true);
+                scheduler.shutdown();
+                out.println("scheduleWithFixedDelay finished");
+            }, 10, TimeUnit.SECONDS);
+    }
+    // newScheduledThreadPool(2)
+    static void test2(){
+            final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+            // start in 0-second delay with 2-seconds periods. Doesn't wait to finish the execution.
+            final ScheduledFuture<?> alarmHandler = scheduler.scheduleAtFixedRate(new Alarm("scheduleAtFixedRate"), 0, 2, TimeUnit.SECONDS);
+            // stop the scheduler in 10-seconds
+            Runnable task = () -> {
+                try {
+                    out.println("scheduleWithFixedDelay ⏰");
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    out.println("Interrupted");
+                }
+            };
+            // start in 1-second delay with 3-seconds periods. Doesn't wait to finish the execution.
+            final ScheduledFuture<?> alarmHandler2 = scheduler.scheduleAtFixedRate(task, 1, 3, TimeUnit.SECONDS);
+            scheduler.schedule((Runnable) () -> {
+                alarmHandler2.cancel(true);
+                scheduler.shutdown();
+                out.println("scheduleWithFixedDelay finished");
+            }, 10, TimeUnit.SECONDS);
+    }
+    // timer
+    static void test3(){
+        // Timer
+        Timer timer = new Timer();
+        Counter counter = new Counter();
+
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                counter.increment();
+                out.println(counter.getCounter() + " Timer Alarm ⏰ " + System.currentTimeMillis());
+            }
+        };
+        // 0-second delay with repeats every 1-second
+        timer.scheduleAtFixedRate(timerTask, 0,2000);
+        // Örneği sonlandırmak için 10 saniye sonra Timer'ı kapatalım
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                timer.cancel();
+                timer.purge();
+            }
+        }, 10000);
+    }
+    public static void test(){
+//        test1();
+//        test2();
+        test3();
+    }
+}
+
 /*
 * java.util.concurrent.*
 * */
-class Concurrent {
+class FixedThreadPool {
     public static void test1(){
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         for (int i = 0; i < 10; i++) {
@@ -274,19 +409,37 @@ class Concurrent {
         }
         executorService.shutdown(); // stop the execution, transition thread state to "DEAD"
     }
+    public static void test3(){
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+        for (int i = 0; i < 5; i++) {
+            int taskId = i;
+            executor.submit(()->{
+                out.println("Task: " + taskId + " started. Thread name: " + Thread.currentThread().getName());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                out.println("Task: " + taskId + " stopped. Thread name: " + Thread.currentThread().getName());
+            });
+        }
+        executor.shutdown();
+    }
     public static void test(){
-        test1();
-        test2();
+//        test1();
+//        test2();
+        test3();
     }
 }
 
 public class MultiThread {
 
-    public static void main(String[] args){
+public static void main(String[] args){
 //            MyThread.test();
 //            MyRunnable.test();
-            Interrupted.test();
+//            Interrupted.test();
 //            Counter.test();
-//            Concurrent.test();
+//            ScheduledTasks.test();
+            FixedThreadPool.test();
         }
 }
