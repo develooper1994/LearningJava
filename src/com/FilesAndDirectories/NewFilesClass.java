@@ -47,8 +47,12 @@ public class NewFilesClass {
         }
     }
     private void deleteFile() {
-        var file = new File(filename);
-        out.println(file.exists() && file.delete() ? "File deleted" : "File cannot deleted");
+        try {
+            Files.delete(Path.of(filename));
+            out.println("File deleted");
+        } catch (IOException e) {
+            out.println("File cannot deleted");
+        }
     }
 
     public static void main(String[] args){
