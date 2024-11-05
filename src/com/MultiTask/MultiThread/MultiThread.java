@@ -508,7 +508,7 @@ Java’da çeşitli iş parçacığı havuzları bulunmaktadır:
 * Hata Toleransı: Timer, bir görevde hata oluştuğunda tüm zamanlayıcıyı durdurabilir;
 * ScheduledExecutorService ise daha dayanıklıdır.
 *
-* Schedule: Tek seferlik çalıştırm gerçekleştirir. Qt oneShotTimer gibi
+* Schedule: Tek seferlik çalıştırma gerçekleştirir. Qt oneShotTimer gibi
 * ScheduleAtFixedRate: Birden fazla kez çalıştırma gerçekleştirir. Metodun sonuçlanmasıını beklemez.
 * Periyotlar arasındaki süre metotların başlangıçları arasındaki süresidir.
 * ScheduleWithFixedDelay: Birden fazla kez çalıştırma gerçekleştirir. Metodun sonuçlanmasıını bekler.

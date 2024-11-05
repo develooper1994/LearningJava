@@ -70,10 +70,8 @@ class OldMethods implements DirectoryMethods{
     @Override
     public void listing() {
         File[] dirs = new File(".").listFiles();
-        if (dirs != null)
-        {
-            for (var d :
-                    dirs) {
+        if (dirs != null) {
+            for (var d : dirs) {
                 out.println(d.getName());
             }
         } else {
